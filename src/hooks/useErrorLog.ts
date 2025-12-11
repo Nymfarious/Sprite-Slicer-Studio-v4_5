@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { ErrorLogEntry, ErrorType } from '@/types/error';
 import { useLocalStorage } from './useLocalStorage';
+import { supabase } from '@/integrations/supabase/client';
 
 const MAX_ERRORS = 50;
 
@@ -49,6 +50,40 @@ export function useErrorLog() {
     setSpriteVisible(true);
   }, [setErrors, getHelpfulMessage]);
 
+  const analyzeErrorWithAI = useCallback(async (errorId: string) => {
+    // Mark error as analyzing
+    setErrors(prev => prev.map(err => 
+      err.id === errorId ? { ...err, isAnalyzing: true } : err
+    ));
+
+    const error = errors.find(e => e.id === errorId);
+    if (!error) return;
+
+    try {
+      const { data, error: fetchError } = await supabase.functions.invoke('analyze-error', {
+        body: { 
+          error: error.message, 
+          context: error.details || `Type: ${error.type}${error.fileName ? `, File: ${error.fileName}` : ''}` 
+        }
+      });
+
+      if (fetchError) throw fetchError;
+
+      setErrors(prev => prev.map(err => 
+        err.id === errorId 
+          ? { ...err, aiSuggestion: data.suggestion || 'Unable to analyze', isAnalyzing: false } 
+          : err
+      ));
+    } catch (err) {
+      console.log('AI analysis failed:', err);
+      setErrors(prev => prev.map(e => 
+        e.id === errorId 
+          ? { ...e, aiSuggestion: 'AI analysis unavailable. Check manually.', isAnalyzing: false } 
+          : e
+      ));
+    }
+  }, [errors, setErrors]);
+
   const togglePin = useCallback((id: string) => {
     setErrors(prev => prev.map(err => 
       err.id === id ? { ...err, pinned: !err.pinned } : err
@@ -77,6 +112,7 @@ export function useErrorLog() {
         `**Message:** ${e.message}\n\n` +
         (e.fileName ? `**File:** ${e.fileName}\n\n` : '') +
         (e.details ? `**Details:**\n\`\`\`\n${e.details}\n\`\`\`\n\n` : '') +
+        (e.aiSuggestion ? `**AI Suggestion:**\n${e.aiSuggestion}\n\n` : '') +
         `---`
       ).join('\n\n');
     
@@ -106,5 +142,6 @@ export function useErrorLog() {
     spriteMessage,
     spriteVisible,
     dismissSprite,
+    analyzeErrorWithAI,
   };
 }

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Pin, Trash2, Download, AlertCircle, AlertTriangle, Info, Wifi, FileX, Cog, CheckCircle } from 'lucide-react';
+import { Pin, Trash2, Download, AlertCircle, AlertTriangle, Info, Wifi, FileX, Cog, CheckCircle, Sparkles, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ErrorLogEntry, ErrorType } from '@/types/error';
 
@@ -11,6 +11,7 @@ interface ErrorLogPanelProps {
   onDelete: (id: string) => void;
   onClear: () => void;
   onExport: () => void;
+  onAnalyze?: (id: string) => void;
 }
 
 const getErrorIcon = (type: ErrorType) => {
@@ -47,7 +48,7 @@ const getErrorColor = (type: ErrorType) => {
   }
 };
 
-export function ErrorLogPanel({ errors, onTogglePin, onDelete, onClear, onExport }: ErrorLogPanelProps) {
+export function ErrorLogPanel({ errors, onTogglePin, onDelete, onClear, onExport, onAnalyze }: ErrorLogPanelProps) {
   if (errors.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-6">
@@ -104,6 +105,22 @@ export function ErrorLogPanel({ errors, onTogglePin, onDelete, onClear, onExport
                     </span>
                   </div>
                   <div className="flex items-center gap-0.5">
+                    {onAnalyze && !error.aiSuggestion && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => onAnalyze(error.id)}
+                        disabled={error.isAnalyzing}
+                        title="Analyze with AI"
+                      >
+                        {error.isAnalyzing ? (
+                          <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                        ) : (
+                          <Sparkles className="h-3 w-3 text-primary" />
+                        )}
+                      </Button>
+                    )}
                     <Button 
                       variant="ghost" 
                       size="icon"
@@ -140,6 +157,17 @@ export function ErrorLogPanel({ errors, onTogglePin, onDelete, onClear, onExport
                       {error.details}
                     </pre>
                   </details>
+                )}
+
+                {/* AI Suggestion */}
+                {error.aiSuggestion && (
+                  <div className="mt-3 p-2 rounded bg-primary/10 border border-primary/20">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-primary mb-1">
+                      <Sparkles className="h-3 w-3" />
+                      AI Suggestion
+                    </div>
+                    <p className="text-xs text-foreground">{error.aiSuggestion}</p>
+                  </div>
                 )}
               </div>
             );

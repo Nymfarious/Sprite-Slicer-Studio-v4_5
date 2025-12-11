@@ -12,6 +12,7 @@ interface ErrorLogContextType {
   spriteMessage: string | null;
   spriteVisible: boolean;
   dismissSprite: () => void;
+  analyzeErrorWithAI: (errorId: string) => Promise<void>;
 }
 
 const ErrorLogContext = createContext<ErrorLogContextType | null>(null);

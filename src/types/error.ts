@@ -8,4 +8,6 @@ export interface ErrorLogEntry {
   details?: string;
   fileName?: string;
   pinned: boolean;
+  aiSuggestion?: string;
+  isAnalyzing?: boolean;
 }
