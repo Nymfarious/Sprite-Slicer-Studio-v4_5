@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { CropShape, CropMode, CropSelection } from '@/components/CropTool';
+import { CropShape, CropMode, CropSelection } from '@/components/CropTool/types';
+import { drawOctagonPath } from '@/components/CropTool/cropHelpers';
 import { toast } from 'sonner';
 
 export function useCropTool() {
@@ -41,20 +42,6 @@ export function useCropTool() {
     setSelection(null);
   }, []);
 
-  // Helper to draw octagon path
-  const drawOctagonPath = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) => {
-    const cut = Math.min(w, h) * 0.29;
-    ctx.beginPath();
-    ctx.moveTo(x + cut, y);
-    ctx.lineTo(x + w - cut, y);
-    ctx.lineTo(x + w, y + cut);
-    ctx.lineTo(x + w, y + h - cut);
-    ctx.lineTo(x + w - cut, y + h);
-    ctx.lineTo(x + cut, y + h);
-    ctx.lineTo(x, y + h - cut);
-    ctx.lineTo(x, y + cut);
-    ctx.closePath();
-  };
 
   const applyCrop = useCallback((
     imageDataUrl: string,

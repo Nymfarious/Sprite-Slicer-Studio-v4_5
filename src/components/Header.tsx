@@ -25,7 +25,7 @@ export function Header({ onOpenPreferences, onOpenFlowchart, onHomeClick }: Head
         </Tooltip>
         <div>
           <h1 className="font-semibold text-foreground tracking-tight">Sprite Slicer Studio</h1>
-          <p className="text-xs text-muted-foreground font-mono">v4</p>
+          <p className="text-xs text-muted-foreground font-mono">4.5 Pre-Alpha</p>
         </div>
       </div>
 
