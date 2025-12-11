@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 187 85% 53%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 222 47% 14%;
+    --secondary-foreground: 210 40% 90%;
+
+    --muted: 222 30% 18%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 280 65% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 45%;
+    --success-foreground: 222 47% 6%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 6%;
+
+    --border: 222 30% 18%;
+    --input: 222 30% 14%;
+    --ring: 187 85% 53%;
+
+    --radius: 0.5rem;
+
+    /* Custom tool-specific tokens */
+    --grid-line: 187 85% 53%;
+    --panel-border: 222 30% 22%;
+    --drag-handle: 222 30% 25%;
+    --drag-handle-hover: 187 85% 53%;
+    --overlay-bg: 222 47% 4% / 0.9;
+    --glow-primary: 0 0 20px hsl(187 85% 53% / 0.3);
+    --glow-accent: 0 0 20px hsl(280 65% 60% / 0.3);
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 187 85% 53%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 187 85% 53%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-semibold tracking-tight;
+  }
+
+  code, pre, .mono {
+    @apply font-mono;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow-accent);
+  }
+
+  .grid-pattern {
+    background-image: 
+      linear-gradient(hsl(var(--grid-line) / 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--grid-line) / 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .drag-handle {
+    @apply w-1.5 cursor-col-resize transition-colors duration-200;
+    background: hsl(var(--drag-handle));
+  }
+
+  .drag-handle:hover {
+    background: hsl(var(--drag-handle-hover));
+  }
+
+  .upload-zone {
+    @apply border-2 border-dashed border-border rounded-lg transition-all duration-300;
+  }
+
+  .upload-zone:hover,
+  .upload-zone.dragging {
+    @apply border-primary bg-primary/5;
+  }
+
+  .asset-card {
+    @apply bg-secondary/50 rounded-lg border border-border/50 overflow-hidden transition-all duration-200;
+  }
+
+  .asset-card:hover {
+    @apply border-primary/50 bg-secondary/70;
+    box-shadow: var(--glow-primary);
+  }
+
+  .overlay-panel {
+    @apply fixed inset-y-0 right-0 w-full max-w-md border-l border-border shadow-2xl z-50;
+    background: hsl(var(--card) / 0.92);
+    backdrop-filter: blur(12px);
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  .auth-button {
+    @apply w-12 h-12 rounded-xl bg-secondary/80 border border-border flex items-center justify-center transition-all duration-200;
+  }
+
+  .auth-button:hover {
+    @apply bg-secondary border-primary/50 scale-105;
+    box-shadow: var(--glow-primary);
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
