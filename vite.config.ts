@@ -4,7 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/sprite-slicer-studio-v4_5/' : '/',
+  base: mode === 'production' ? '/Sprite-Slicer-Studio-v4_5/' : '/',
   server: {
     host: "::",
     port: 8080,
