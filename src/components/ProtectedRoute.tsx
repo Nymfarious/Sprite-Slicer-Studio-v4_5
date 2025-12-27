@@ -8,10 +8,11 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, loading, isDevMode } = useAuth()
+  const { user, loading } = useAuth()
   const location = useLocation()
 
   // Dev mode bypass - skip auth check
+  const isDevMode = localStorage.getItem('static-karma-dev-mode') === 'true'
   if (isDevMode) {
     return <>{children}</>
   }
