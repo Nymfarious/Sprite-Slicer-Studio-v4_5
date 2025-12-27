@@ -12,6 +12,7 @@ interface AuthContextType {
   signInWithEmail: (email: string, password: string) => Promise<void>
   signUpWithEmail: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  devBypass: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -71,8 +72,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut()
   }
 
+  const devBypass = () => {
+    // Create a fake dev user for bypassing auth during development
+    const fakeUser = {
+      id: 'dev-user-bypass',
+      email: 'dev@localhost',
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString()
+    } as User
+    setUser(fakeUser)
+    setSession({ user: fakeUser } as Session)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signInWithGithub, signInWithDiscord, signInWithEmail, signUpWithEmail, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, signInWithGoogle, signInWithGithub, signInWithDiscord, signInWithEmail, signUpWithEmail, signOut, devBypass }}>
       {children}
     </AuthContext.Provider>
   )
