@@ -1,0 +1,37 @@
+import { ReactNode } from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import { Loader2 } from 'lucide-react'
+
+interface ProtectedRouteProps {
+  children: ReactNode
+}
+
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { user, loading, isDevMode } = useAuth()
+  const location = useLocation()
+
+  // Dev mode bypass - skip auth check
+  if (isDevMode) {
+    return <>{children}</>
+  }
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Checking authentication...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Redirect to auth if not logged in
+  if (!user) {
+    return <Navigate to="/auth" state={{ from: location }} replace />
+  }
+
+  return <>{children}</>
+}
