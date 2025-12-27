@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Bug } from 'lucide-react'
 
 export function LoginPage() {
-  const { signInWithGoogle, signInWithGithub, signInWithDiscord, signInWithEmail, signUpWithEmail } = useAuth()
+  const { signInWithGoogle, signInWithGithub, signInWithDiscord, signInWithEmail, signUpWithEmail, devBypass } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -41,7 +42,7 @@ export function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
       <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-white">Sprite Splicer Studio</CardTitle>
+          <CardTitle className="text-2xl font-bold text-white">Sprite Slicer Studio</CardTitle>
           <CardDescription className="text-gray-400">Sign in to continue</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -137,6 +138,18 @@ export function LoginPage() {
               {error}
             </p>
           )}
+
+          {/* Dev Bypass */}
+          <div className="pt-4 border-t border-gray-700">
+            <Button
+              onClick={devBypass}
+              variant="ghost"
+              className="w-full text-gray-500 hover:text-gray-300 hover:bg-gray-700/50"
+            >
+              <Bug className="w-4 h-4 mr-2" />
+              Dev Bypass (Skip Auth)
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
